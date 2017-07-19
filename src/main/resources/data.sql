@@ -1,0 +1,1 @@
+INSERT INTO cases VALUES ('12345', 'daf', '2017-07-02', 'CREATED')
