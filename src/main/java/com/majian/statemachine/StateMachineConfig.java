@@ -35,19 +35,23 @@ public class StateMachineConfig {
         actions.forEach(action -> {
             TransitionListener[] annotations = action.getClass().getDeclaredAnnotationsByType(TransitionListener.class);
             for (TransitionListener annotation : annotations) {
-                State source = annotation.source();
-                State target = annotation.target();
-                Event event = annotation.event();
-                if (!stateRelations.contains(source, event)) {
-                    GeneralTransition transition =
-                        new GeneralTransition(source, event, target, Lists.newArrayList(action));
-                    stateRelations.put(source, event, transition);
-                } else {
-                    Transition transition = stateRelations.get(source, event);
-                    transition.addLisener(action);
-                }
+                registryTransition(action, annotation);
             }
         });
+    }
+
+    private void registryTransition(Action action, TransitionListener annotation) {
+        State source = annotation.source();
+        State target = annotation.target();
+        Event event = annotation.event();
+        if (!stateRelations.contains(source, event)) {
+            GeneralTransition transition =
+                new GeneralTransition(source, event, target, Lists.newArrayList(action));
+            stateRelations.put(source, event, transition);
+        } else {
+            Transition transition = stateRelations.get(source, event);
+            transition.addLisener(action);
+        }
     }
 
     public Transition getTransition(State state, Event event) {
