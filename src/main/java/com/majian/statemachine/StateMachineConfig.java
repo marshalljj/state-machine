@@ -33,18 +33,19 @@ public class StateMachineConfig {
     @PostConstruct
     private void init() {
         actions.forEach(action -> {
-            TransitionListener annotation = action.getClass()
-                .getAnnotation(TransitionListener.class);
-            State source = annotation.source();
-            State target = annotation.target();
-            Event event = annotation.event();
-            if (!stateRelations.contains(source, event)) {
-                GeneralTransition transition =
-                    new GeneralTransition(source, event, target, Lists.newArrayList(action));
-                stateRelations.put(source, event, transition);
-            } else {
-                Transition transition = stateRelations.get(source, event);
-                transition.addLisener(action);
+            TransitionListener[] annotations = action.getClass().getDeclaredAnnotationsByType(TransitionListener.class);
+            for (TransitionListener annotation : annotations) {
+                State source = annotation.source();
+                State target = annotation.target();
+                Event event = annotation.event();
+                if (!stateRelations.contains(source, event)) {
+                    GeneralTransition transition =
+                        new GeneralTransition(source, event, target, Lists.newArrayList(action));
+                    stateRelations.put(source, event, transition);
+                } else {
+                    Transition transition = stateRelations.get(source, event);
+                    transition.addLisener(action);
+                }
             }
         });
     }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @TransitionListener(source = State.CREATED, target = State.CREATED, event = Event.ORDER_IN)
+@TransitionListener(source = State.DISTRIBUTED, target = State.DISTRIBUTED, event = Event.ORDER_IN)
 public class TransitionListener1 implements Action<Object> {
 
     @Override
