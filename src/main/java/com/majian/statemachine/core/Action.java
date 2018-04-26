@@ -1,4 +1,4 @@
-package com.majian.statemachine;
+package com.majian.statemachine.core;
 
 /**
  * Created by majian on 2017/7/19.
