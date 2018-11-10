@@ -2,6 +2,8 @@ package com.majian.statemachine.configuration;
 
 import com.majian.statemachine.core.*;
 
+import java.util.function.Consumer;
+
 
 /**
  * Created by jianma on 2018/4/24.
@@ -31,8 +33,24 @@ public class StateMachineBuilder {
                 .build();
     }
 
-    public void onTransitionStarted(EventListener listener) {
+    public void onEvent(EventListener listener) {
         eventPublisher.register(listener);
+    }
+
+    public void onTransitionStated(Consumer<TransitionStartEvent> consumer) {
+
+        eventPublisher.register(new EventListener() {
+            @Override
+            public boolean support(Object o) {
+                return TransitionStartEvent.class.isAssignableFrom(o.getClass());
+            }
+
+            @Override
+            public void onEvent(Object o) {
+                consumer.accept((TransitionStartEvent)o);
+            }
+        });
+
     }
 
 

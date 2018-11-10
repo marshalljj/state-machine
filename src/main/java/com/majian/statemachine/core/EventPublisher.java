@@ -10,7 +10,9 @@ public class EventPublisher {
     private List<EventListener> eventListeners = new LinkedList<>();
 
     public void publish(Object event) {
-        eventListeners.forEach(eventListener -> eventListener.onEvent(event));
+        eventListeners.stream()
+                      .filter(eventListener -> eventListener.support(event))
+                      .forEach(eventListener -> eventListener.onEvent(event));
     }
 
     public void register(EventListener eventListener) {

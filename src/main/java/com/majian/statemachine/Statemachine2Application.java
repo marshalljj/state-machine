@@ -26,7 +26,7 @@ public class Statemachine2Application {
         for (TransitionProperties properties: transitionPropertiesList) {
             stateMachineBuilder.addTransition(properties);
         }
-        stateMachineBuilder.onTransitionStarted(event -> System.out.println("transition started"));
+        stateMachineBuilder.onTransitionStated(event -> System.out.println("transition started"));
         return stateMachineBuilder;
     }
 
