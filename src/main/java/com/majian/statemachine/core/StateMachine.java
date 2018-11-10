@@ -11,26 +11,25 @@ public class StateMachine {
     private State current;
     private EventPublisher eventPublisher;
 
-    public StateMachine(State current) {
+    public StateMachine(State current, EventPublisher eventPublisher) {
         this.current = current;
-        this.eventPublisher = new EventPublisher();
+        this.eventPublisher = eventPublisher;
     }
 
     public boolean accept(String event) {
         return current.getTransition(event) != null;
     }
 
-    public void onEvent(String event, StateContext context) {
+    public State onEvent(String event, StateContext context) {
         Transition transition = current.getTransition(event);
         if (transition == null) {
-            eventPublisher.publish(new EventNotAcceptedEvent());
-            return;
+            throw new EventNotAcceptedException();
         }
-
+        eventPublisher.publish(new TransitionStartEvent());
         Guard guard = transition.getGuard();
-        if (!guard.match(context)) {
+        if (guard != null && !guard.match(context)) {
             eventPublisher.publish(new ConditionNotSatisfiedEvent());
-            return;
+            return null;
         }
 
         Collection<Action> actions = transition.getActions();
@@ -39,7 +38,7 @@ public class StateMachine {
         }
         current = transition.getTarget();
         eventPublisher.publish(new TransitionCompletedEvent());
-
+        return current;
     }
 
 

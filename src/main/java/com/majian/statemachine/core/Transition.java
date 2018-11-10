@@ -1,24 +1,28 @@
 package com.majian.statemachine.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by majian on 2017/7/19.
  */
 public class Transition {
     private State source;
-    private State target;
     private String event;
+    private State target;
     private Collection<Action> actions;
     private Guard guard;
 
     public Transition(State source, String event, State target) {
+        this(source, event, target, null, null);
+    }
+
+    public Transition(State source, String event, State target, Collection<Action> actions, Guard guard) {
         this.source = source;
         this.target = target;
         this.event = event;
-        this.actions = new ArrayList<>();
-        this.guard = new DefaultGuard();
+        this.actions = actions;
+        this.guard = guard;
     }
 
     public State getSource() {
@@ -34,7 +38,7 @@ public class Transition {
     }
 
     public Collection<Action> getActions() {
-        return actions;
+        return actions == null ? Collections.emptyList() : actions;
     }
 
     public Guard getGuard() {
@@ -47,5 +51,9 @@ public class Transition {
 
     public void addAction(Action action) {
         actions.add(action);
+    }
+
+    public void setActions(Collection<Action> actions) {
+        this.actions = actions;
     }
 }

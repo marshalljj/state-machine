@@ -5,5 +5,7 @@ package com.majian.statemachine.core;
  */
 public interface Action<T> {
 
+    String getName();
+
     void onTransition(T data);
 }

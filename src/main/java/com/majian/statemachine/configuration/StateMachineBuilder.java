@@ -1,7 +1,6 @@
 package com.majian.statemachine.configuration;
 
-import com.majian.statemachine.core.FSM;
-import com.majian.statemachine.core.StateMachine;
+import com.majian.statemachine.core.*;
 
 
 /**
@@ -9,16 +8,31 @@ import com.majian.statemachine.core.StateMachine;
  */
 public class StateMachineBuilder {
 
-    private final FSM fsm = new FSM();
+    private final StateConfig stateConfig = new StateConfig();
+    private final EventPublisher eventPublisher = new EventPublisher();
 
-
-    public TransitionBuilder withTransition() {
-        TransitionBuilderImpl transitionBuilder = new TransitionBuilderImpl(fsm);
-        return transitionBuilder;
-    };
 
     public StateMachine createInstance(String currentStateId) {
-        return new StateMachine(fsm.getState(currentStateId));
+        State state = stateConfig.get(currentStateId);
+        if (state == null) {
+            throw new IllegalArgumentException("state not exists :" + currentStateId);
+        }
+        return new StateMachine(state, eventPublisher);
+    }
+
+
+    public void addTransition(TransitionProperties properties) {
+        new TransitionBuilder(stateConfig)
+                .from(properties.getFrom())
+                .to(properties.getTo())
+                .on(properties.getEvent())
+                .when(properties.getGuard())
+                .doAction(properties.getActions())
+                .build();
+    }
+
+    public void onTransitionStarted(EventListener listener) {
+        eventPublisher.register(listener);
     }
 
 

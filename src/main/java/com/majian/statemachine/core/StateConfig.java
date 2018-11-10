@@ -6,10 +6,10 @@ import java.util.Map;
 /**
  * Created by jianma on 2018/4/25.
  */
-public class FSM {
+public class StateConfig {
     private final Map<String, State> stateMap = new HashMap<>();
 
-    public  State getState(String stateId) {
+    public  State createIfNotExists(String stateId) {
         State state = stateMap.get(stateId);
         if (state == null) {
             state = new State(stateId);
@@ -18,4 +18,7 @@ public class FSM {
         return state;
     }
 
+    public  State get(String stateId) {
+        return stateMap.get(stateId);
+    }
 }
