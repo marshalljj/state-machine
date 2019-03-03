@@ -30,6 +30,7 @@ public class Statemachine2Application {
         return stateMachineBuilder;
     }
 
+    //需要动态更新时，可改为从数据库获取配置
     private static List<TransitionProperties> getTransitionPropertiesList() {
         TransitionProperties properties1 = new TransitionProperties("state1", "state2", "event1");
         TransitionProperties properties2 = new TransitionProperties("state1", "state3", "event2");
